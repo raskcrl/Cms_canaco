@@ -36,6 +36,12 @@ class Archivo(models.Model):
     def __str__(self):
         return self.nombre
 
+    @property
+    def display_url(self):
+        if self.ruta:
+            return self.ruta.url
+        return ''
+
 
 class Perfil(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -113,3 +119,5 @@ class Comentario(models.Model):
         managed = True
         db_table = 'comentario'
         verbose_name_plural = 'Comentarios'
+
+

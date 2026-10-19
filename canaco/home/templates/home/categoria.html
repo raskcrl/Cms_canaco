@@ -1,37 +1,87 @@
 {% extends 'partials/base.html' %}
 {% load static %}
+
 {% block title %}Categorías{% endblock %}
 
 {% block content %}
-<section class="section">
+  <section class="section">
     <div class="container">
-        <div class="row mb-4">
-            <div class="col-lg-8">
-                <h2 class="posts-entry-title">Categoría: Tecnología</h2>
-            </div>
-            <div class="col-lg-4">
-                <select class="form-control" onchange="">
-                    <option value="categorias">Todas las categorías</option>
-                    <option value="tecnologia">Tecnología</option>
-                </select>
-            </div>
+      
+      <!-- Header -->
+      <div class="row mb-4">
+        <div class="col-12 text-center">
+          <h2>
+            {% if categoria_actual %}
+              Categoría: {{ categoria_actual.nombre }}
+            {% else %}
+              Todas las noticias
+            {% endif %}
+          </h2>
         </div>
+      </div>
 
-        <div class="row mb-5 align-items-center">
-            <div class="col-lg-3">
-                <a href="{% url 'home:noticia' %}" class="img-link">
-                    <img src="{% static 'images/hero_1.jpg' %}" alt="titulo" class="img-fluid category-post-image">
-                </a>
-            </div>
-            <div class="col-lg-8">
-                <span class="date">Fecha &bullet; Categoría</span>
-                <h2><a href="{% url 'home:noticia' %}">Título de la noticia</a></h2>
-                <p>Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500</p>
-                <p><a href="{% url 'home:noticia' %}" class="btn btn-sm btn-outline-primary">Leer más</a></p>
-            </div>
+      <!-- Categories Filter -->
+      <div class="row mb-4">
+        <div class="col-12 text-center">
+          <a href="{% url 'home:categoria' %}" class="btn btn-outline-primary m-1">Todas las categorías</a>
+          {% for categoria in categorias %}
+            <a href="{% url 'home:categoria_filtrada' categoria.id %}" class="btn btn-outline-primary m-1">
+              {{ categoria.nombre }}
+            </a>
+          {% endfor %}
         </div>
-        
-        <p>No hay noticias para esta categoría.</p>
+      </div>
+
+      <!-- News List -->
+      <div class="row">
+        {% for noticia in publicaciones %}
+          <div class="col-lg-4 mb-4">
+            <div class="post-entry-alt">
+              <a href="{% url 'home:noticia_detalle' noticia.id %}" class="img-link">
+                {% if noticia.imagen_portada %}
+                  <img src="{{ noticia.imagen_portada.display_url }}" 
+                       alt="{{ noticia.titulo }}" 
+                       class="img-fluid publication-card-image" 
+                       style="height: 200px; width: 100%; object-fit: cover; object-position: center;">
+                {% else %}
+                  <img src="{% static 'images/img_1_horizontal.jpg' %}" 
+                       alt="{{ noticia.titulo }}" 
+                       class="img-fluid publication-card-image" 
+                       style="height: 200px; width: 100%; object-fit: cover; object-position: center;">
+                {% endif %}
+              </a>
+
+              <div class="excerpt">
+                <div class="post-meta align-items-center text-left clearfix">
+                  <span>{{ noticia.createdat|date:"d M Y" }}</span>
+                  <span>&nbsp;•&nbsp;</span>
+                  <span>
+                    {% if noticia.categoria %}
+                      {{ noticia.categoria.nombre }}
+                    {% else %}
+                      Sin categoría
+                    {% endif %}
+                  </span>
+                </div>
+
+                <h2>
+                  <a href="{% url 'home:noticia_detalle' noticia.id %}">{{ noticia.titulo }}</a>
+                </h2>
+                
+                <p>{{ noticia.resumen }}</p>
+                <p>
+                  <a href="{% url 'home:noticia_detalle' noticia.id %}" class="read-more">Leer más</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        {% empty %}
+          <div class="col-12 text-center">
+            <p>No hay noticias para esta categoría.</p>
+          </div>
+        {% endfor %}
+      </div>
+
     </div>
-</section>
+  </section>
 {% endblock content %}

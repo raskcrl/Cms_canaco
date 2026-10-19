@@ -1,11 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar categorias</title>
-</head>
-<body>
-    <h1>Editar categorias </h1>
-</body>
-</html>
+{% extends 'partials/sidebar_base.html' %}
+{% load static %}
+{% block title %}Editar Categoría{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+    <div class="profile-edit-card">
+        <h3>Editar Categoría</h3>
+
+        <form method="POST" class="profile-edit-form">
+            {% csrf_token %}
+            
+            <div class="profile-form-row">
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" value="{{ categoria.nombre }}" required>
+            </div>
+
+            <div class="profile-form-actions">
+                <button type="submit" class="btn btn-success">Guardar Cambios</button>
+                <a href="{% url 'home:crud_categoria' %}" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

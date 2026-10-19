@@ -2,6 +2,7 @@ from django.urls import path
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LogoutView
 from . import views
+from django.db.models import F
 
 app_name = "home"
 
@@ -37,4 +38,20 @@ urlpatterns = [
     path("crud_comentarios/", views.crud_comentarios, name="crud_comentarios"),
     path("crud_noticias/", views.crud_noticias, name="crud_noticias"),
     path("editar_categoria/", views.editar_categoria, name="editar_categoria"),
+
+    path("crud_categorias/<int:pk>/editar", views.editar_categoria, name="editar_categoria"),
+    path("crud_categorias/<int:pk>/eliminar", views.eliminar_categoria, name="eliminar_categoria"),
+
+    path("crud_comentarios/<int:pk>/aprobar", views.aprobar_comentario, name="aprobar_comentario"),
+    path("crud_comentarios/<int:pk>/bloquear", views.bloquear_comentario, name="bloquear_comentario"),
+    path("crud_comentarios/<int:pk>/eliminar", views.eliminar_comentario, name="eliminar_comentario"),
+
+
+    path("noticia/<int:pk>", views.noticia, name="noticia_detalle"),
+    path("crud_noticias/<int:pk>/editar", views.editar_publicacion, name="editar_publicacion"),
+    path("crud_noticias/<int:pk>/publicar", views.publicar_publicacion, name="publicar_publicacion"),
+    path("crud_noticias/<int:pk>/eliminar", views.eliminar_publicacion, name="eliminar_publicacion"),
+    path("categoria/<int:pk>", views.categoria, name="categoria_detalle"),
+
+
 ]

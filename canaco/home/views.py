@@ -228,8 +228,11 @@ def noticia(request):
 @login_required
 def perfil(request):
     perfil_usuario, _ = Perfil.objects.get_or_create(user=request.user)
-    return render(request, 'home/perfil.html', {'perfil_usuario': perfil_usuario})     
-
+    return render(request, 'home/perfil.html', {'perfil_usuario': perfil_usuario})    
+ 
+""" @login_required
+def crud_perfil(request):
+     """
 def sing_up(request):
     if request.method == 'POST':
         username = request.POST.get('username', '').strip()
@@ -265,4 +268,115 @@ def sing_up(request):
         messages.success(request, 'Tu cuenta ha sido creada con éxito. Ahora puedes iniciar sesión.')
         return redirect('home:login')
 
-    return render(request, 'home/sing_up.html')
+    return render(request, 'home/sign_up.html')
+
+@login_required
+def crud_perfil(request):
+    user = request.user
+    perfil, _ = Perfil.objects.get_or_create(user=user)
+
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        first_name = request.POST.get('first_name', '').strip()
+        apellido_paterno = request.POST.get('apellido_paterno', '').strip()
+        apellido_materno = request.POST.get('apellido_materno', '').strip()
+        foto = request.FILES.get('foto')
+
+        if not username:
+            messages.error(request, 'El usuario es obligatorio.')
+            return redirect('home:crud_perfil')
+
+        if User.objects.filter(username=username).exclude(pk=user.pk).exists():
+            messages.error(request, 'Ese nombre de usuario ya está en uso.')
+            return redirect('home:crud_perfil')
+
+        user.username = username
+        if email:
+            user.email = email
+        user.first_name = first_name
+        user.last_name = ' '.join(filter(None, [apellido_paterno, apellido_materno]))
+        user.save()
+
+        perfil.apellido_paterno = apellido_paterno
+        perfil.apellido_materno = apellido_materno
+
+        if foto:
+            if perfil.foto_perfil:
+                archivo_anterior = perfil.foto_perfil
+                if archivo_anterior.ruta and hasattr(archivo_anterior.ruta, 'path') and os.path.exists(archivo_anterior.ruta.path):
+                    os.remove(archivo_anterior.ruta.path)
+                archivo_anterior.delete()
+            perfil.foto_perfil = guardar_archivo(foto, user)
+
+        perfil.save()
+        messages.success(request, 'Perfil actualizado correctamente.')
+        return redirect('home:perfil')
+
+    return render(request, 'home/crud_perfil.html', {'perfil_usuario': perfil})
+
+@login_required
+def crud_cambiar_contraseña(request):
+    if request.method == 'POST':
+        actual = request.POST.get('actual')
+        nueva = request.POST.get('nueva')
+        confirmar = request.POST.get('confirmar')
+        user = request.user
+
+        if not user.check_password(actual):
+            messages.error(request, 'La contraseña actual es incorrecta.')
+            return redirect('home:crud_cambiar_contraseña')
+
+        if nueva != confirmar:
+            messages.error(request, 'Las nuevas contraseñas no coinciden.')
+            return redirect('home:crud_cambiar_contraseña')
+
+        user.set_password(nueva)
+        user.save()
+        update_session_auth_hash(request, user)
+        messages.success(request, 'Contraseña actualizada correctamente.')
+        return redirect('home:crud_cambiar_contraseña')
+
+    return render(request, 'home/crud_cambiar_contraseña.html')
+
+@operador_required
+def crear_usuario(request):
+    if request.method == 'POST':
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        first_name = request.POST.get('first_name', '').strip()
+        apellido_paterno = request.POST.get('apellido_paterno', '').strip()
+        apellido_materno = request.POST.get('apellido_materno', '').strip()
+        password1 = request.POST.get('password1', '')
+        password2 = request.POST.get('password2', '')
+
+        if not username or not password1:
+            messages.error(request, 'Usuario y contraseña son obligatorios.')
+            return redirect('home:crear_usuario')
+
+        if password1 != password2:
+            messages.error(request, 'Las contraseñas no coinciden.')
+            return redirect('home:crear_usuario')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'El usuario ya existe.')
+            return redirect('home:crear_usuario')
+
+        user = User.objects.create_user(username=username, email=email, password=password1)
+        user.first_name = first_name
+        user.last_name = ' '.join(filter(None, [apellido_paterno, apellido_materno]))
+
+        rol = request.POST.get('rol')
+        user.is_staff = rol in ['editor', 'administrador']
+        user.is_superuser = rol == 'administrador'
+        user.save()
+
+        perfil, _ = Perfil.objects.get_or_create(user=user)
+        perfil.apellido_paterno = apellido_paterno
+        perfil.apellido_materno = apellido_materno
+        perfil.save()
+
+        messages.success(request, 'Usuario creado correctamente.')
+        return redirect('home:crud_usuario')
+
+    return render(request, 'home/crear_usuario.html')

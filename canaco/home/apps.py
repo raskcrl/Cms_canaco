@@ -7,5 +7,5 @@ class HomeConfig(AppConfig):
 
     def ready(self):
         # Comenta o elimina esta línea si no tienes un archivo signals.py
-        # import home.signals
-        pass
+            import home.signals
+        #pass

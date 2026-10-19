@@ -30,7 +30,8 @@ urlpatterns = [
     path("crud_usuarios/<int:pk>/editar", views.editar_usuario, name="editar_usuario"),
     path("crud_usuarios/<int:pk>/bloquear", views.bloquear_usuario, name="bloquear_usuario"),
     path("crud_usuarios/<int:pk>/eliminar", views.eliminar_usuario, name="eliminar_usuario"),
-    
+    path("crud_usuarios/crear", views.crear_usuario,name="crear_usuario"), 
+
     # Otras secciones
     path("crud_categoria/", views.crud_categoria, name="crud_categoria"),
     path("crud_comentarios/", views.crud_comentarios, name="crud_comentarios"),

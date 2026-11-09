@@ -14,7 +14,7 @@ def es_operador(user):
 
 operador_required = user_passes_test(es_operador, login_url='home:login')
 
-def guardar_archivo(upload, user):
+""" def guardar_archivo(upload, user):
     filename = default_storage.save(f"uploads/{upload.name}", upload)
     return Archivo.objects.create(
         nombre=upload.name,
@@ -23,7 +23,29 @@ def guardar_archivo(upload, user):
         tipo=upload.content_type,
         tamano=upload.size,
         fk_user=user,
+    ) """
+
+def guardar_archivo(upload, user):
+    print("INICIANDO GUARDADO DE ARCHIVO")
+    print("NOMBRE:", upload.name)
+    print("TAMAÑO:", upload.size)
+
+    filename = default_storage.save(f"uploads/{upload.name}", upload)
+
+    print("ARCHIVO SUBIDO:", filename)
+
+    archivo = Archivo.objects.create(
+        nombre=upload.name,
+        nombre_temporal=filename,
+        ruta=filename,
+        tipo=upload.content_type,
+        tamano=upload.size,
+        fk_user=user,
     )
+
+    print("REGISTRO CREADO:", archivo.id)
+
+    return archivo
 
 # Create your views here.
 def index(request):

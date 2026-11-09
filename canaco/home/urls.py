@@ -35,6 +35,7 @@ urlpatterns = [
 
     # Otras secciones
     path("crud_categoria/", views.crud_categoria, name="crud_categoria"),
+    path("categoria/<int:pk>/", views.categoria, name="categoria_filtrada"),
     path("crud_comentarios/", views.crud_comentarios, name="crud_comentarios"),
     path("crud_noticias/", views.crud_noticias, name="crud_noticias"),
     path("editar_categoria/", views.editar_categoria, name="editar_categoria"),

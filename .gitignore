@@ -1,1 +1,16 @@
 canaco_env/
+canaco/.env
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Entorno virtual
+canaco_env/
+
+# Credenciales
+canaco/.env
+
+# Archivos locales
+canaco/media/
+canaco/respaldo*.json

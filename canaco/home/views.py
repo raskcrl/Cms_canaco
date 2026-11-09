@@ -1,4 +1,5 @@
 import os
+import traceback
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
@@ -7,6 +8,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.core.files.storage import default_storage
 from django.db.models import F
 from .models import Archivo, Perfil, Categoria, Publicacion, GaleriaPublicacion, Comentario
+
 
 # Función para verificar si el usuario es operador / staff / activo
 def es_operador(user):
@@ -30,7 +32,12 @@ def guardar_archivo(upload, user):
     print("NOMBRE:", upload.name)
     print("TAMAÑO:", upload.size)
 
-    filename = default_storage.save(f"uploads/{upload.name}", upload)
+    try:
+        filename = default_storage.save(f"uploads/{upload.name}", upload)
+    except Exception:
+        print("ERROR REAL AL SUBIR A CLOUDINARY:")
+        traceback.print_exc()
+        raise
 
     print("ARCHIVO SUBIDO:", filename)
 

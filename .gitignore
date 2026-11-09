@@ -14,3 +14,5 @@ canaco/.env
 # Archivos locales
 canaco/media/
 canaco/respaldo*.json
+
+canaco/staticfiles/

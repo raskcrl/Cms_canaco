@@ -28,12 +28,25 @@ load_dotenv(BASE_DIR / '.env')
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-c+qo3=)$03=(mk9z!!o#@!1jpk23ll(hdgh)0%p*hqig@*0@y#'
+""" SECRET_KEY = 'django-insecure-c+qo3=)$03=(mk9z!!o#@!1jpk23ll(hdgh)0%p*hqig@*0@y#' """
+
+SECRET_KEY = os.getenv(
+    'SECRET_KEY',
+    'clave-local-solo-para-desarrollo'
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+""" DEBUG = True
 
 ALLOWED_HOSTS = []
+ """
+
+DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
+
+ALLOWED_HOSTS = os.getenv(
+    'ALLOWED_HOSTS',
+    'localhost,127.0.0.1'
+).split(',')
 
 
 # Application definition
@@ -50,6 +63,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -155,11 +169,31 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = '/static/'
+""" STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media' 
+
+LOGIN_URL = 'home:login'
+LOGIN_REDIRECT_URL = 'home:index'
+LOGOUT_REDIRECT_URL = 'home:login' """
+
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STORAGES = {
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+}
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 LOGIN_URL = 'home:login'
 LOGIN_REDIRECT_URL = 'home:index'

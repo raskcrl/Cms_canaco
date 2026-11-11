@@ -25,8 +25,10 @@
                         <li class="has-children">
                             <a href="#">Categoría</a>
                             <ul class="dropdown">
-                                <li><a href="">Todas</a></li>
-                                <li><a href="{% url 'home:categoria' %}">Tecnología</a></li>
+                                <li><a href="{% url 'home:categoria' %}">Todas</a></li>
+                                {% for categoria in global_categorias %}
+                                    <li><a href="{% url 'home:categoria_filtrada' categoria.id %}">{{ categoria.nombre }}</a></li>
+                                {% endfor %}
                             </ul>
                         </li>
                         <li><a href="{% url 'home:perfil' %}">Perfil</a></li>

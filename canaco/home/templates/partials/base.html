@@ -9,10 +9,12 @@
 
     <meta name="description" content="Blog Canaco" />
     <meta name="keywords" content="blog, django, bootstrap" />
+    <meta name="theme-color" content="#101a24" />
+    <script>document.documentElement.classList.add('js');</script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Inter:wght@300..800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}">
     <link rel="stylesheet" href="{% static 'fonts/flaticon/font/flaticon.css' %}">
@@ -21,11 +23,12 @@
     <link rel="stylesheet" href="{% static 'css/aos.css' %}">
     <link rel="stylesheet" href="{% static 'css/glightbox.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'css/flatpickr.min.css' %}"> <!-- (Nota: En la imagen el atributo rel="stylesheet" de esta línea está subido en la línea anterior, junto a style.css, pero aquí se estructuró de forma estándar) -->
+    <link rel="stylesheet" href="{% static 'css/flatpickr.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
 
     <title>{% block title %}Canaco{% endblock %}</title>
 </head>
-<body>
+<body id="top">
 
     {% include 'partials/header.html' %}
 
@@ -33,6 +36,10 @@
     {% endblock %}
 
     {% include 'partials/footer.html' %}
+
+    <button type="button" class="back-to-top" aria-label="Volver arriba">
+        <span class="bi bi-arrow-up" aria-hidden="true"></span>
+    </button>
 
     <div id="overlayer"></div>
     <div class="loader">
@@ -49,5 +56,6 @@
     <script src="{% static 'js/navbar.js' %}"></script>
     <script src="{% static 'js/counter.js' %}"></script>
     <script src="{% static 'js/custom.js' %}"></script>
+    <script src="{% static 'js/theme.js' %}"></script>
 </body>
 </html>

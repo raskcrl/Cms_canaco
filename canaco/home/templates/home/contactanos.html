@@ -1,12 +1,44 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contactanos</title>
-</head>
-<body>
-    <h1>Contactanos</h1>
-    
-</body>
-</html>
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block title %}Contacto{% endblock %}
+
+{% block content %}
+<section class="contact-page">
+    <div class="container">
+        <div class="contact-grid">
+            <div class="contact-panel">
+                <span class="eyebrow">Contacto</span>
+                <h1>Hablemos de lo que importa.</h1>
+                <p>Canaco es un espacio abierto para compartir noticias y publicaciones de la comunidad. Si deseas colaborar, publicar o participar en la conversación, esta es la puerta de entrada.</p>
+                <div class="d-flex flex-wrap gap-2 mt-4">
+                    <a href="{% url 'home:sign_up' %}" class="btn btn-primary">Crear una cuenta</a>
+                    <a href="{% url 'home:login' %}" class="btn btn-outline-secondary">Iniciar sesión</a>
+                </div>
+            </div>
+
+            <div class="contact-panel contact-panel--dark">
+                <span class="eyebrow eyebrow--light">Explora</span>
+                <h2>Encuentra tu camino</h2>
+                <p>Consulta las últimas publicaciones o navega por las categorías del portal.</p>
+                <ul class="contact-list">
+                    <li>
+                        <a href="{% url 'home:index' %}">
+                            <span class="bi bi-house-door" aria-hidden="true"></span> Página de inicio
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'home:categoria' %}">
+                            <span class="bi bi-grid" aria-hidden="true"></span> Todas las noticias
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'home:perfil' %}">
+                            <span class="bi bi-person" aria-hidden="true"></span> Mi perfil
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

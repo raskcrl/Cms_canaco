@@ -4,80 +4,82 @@
 {% block title %}Categorías{% endblock %}
 
 {% block content %}
-  <section class="section">
+  <section class="page-hero">
     <div class="container">
-      
-      <!-- Header -->
-      <div class="row mb-4">
-        <div class="col-12 text-center">
-          <h2>
-            {% if categoria_actual %}
-              Categoría: {{ categoria_actual.nombre }}
-            {% else %}
-              Todas las noticias
-            {% endif %}
-          </h2>
-        </div>
+      <span class="eyebrow">Explorar</span>
+      <h1 class="page-hero__title">
+        {% if categoria_actual %}
+          {{ categoria_actual.nombre }}
+        {% else %}
+          Todas las noticias
+        {% endif %}
+      </h1>
+      <p class="page-hero__text">
+        {% if categoria_actual %}
+          Publicaciones y actualidad de la categoría {{ categoria_actual.nombre }}.
+        {% else %}
+          Revisa las publicaciones más recientes y filtra por la categoría que te interesa.
+        {% endif %}
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top: 42px;">
+    <div class="container">
+
+      <div class="filter-pills mb-4" role="navigation" aria-label="Filtrar por categoría">
+        <a href="{% url 'home:categoria' %}" class="{% if not categoria_actual %}active{% endif %}">Todas las categorías</a>
+        {% for categoria in categorias %}
+          <a href="{% url 'home:categoria_filtrada' categoria.id %}"
+             class="{% if categoria_actual and categoria_actual.id == categoria.id %}active{% endif %}">
+            {{ categoria.nombre }}
+          </a>
+        {% endfor %}
       </div>
 
-      <!-- Categories Filter -->
-      <div class="row mb-4">
-        <div class="col-12 text-center">
-          <a href="{% url 'home:categoria' %}" class="btn btn-outline-primary m-1">Todas las categorías</a>
-          {% for categoria in categorias %}
-            <a href="{% url 'home:categoria_filtrada' categoria.id %}" class="btn btn-outline-primary m-1">
-              {{ categoria.nombre }}
-            </a>
-          {% endfor %}
-        </div>
-      </div>
-
-      <!-- News List -->
-      <div class="row">
+      <div class="news-grid">
         {% for noticia in publicaciones %}
-          <div class="col-lg-4 mb-4">
-            <div class="post-entry-alt">
-              <a href="{% url 'home:noticia_detalle' noticia.id %}" class="img-link">
-                {% if noticia.imagen_portada %}
-                  <img src="{{ noticia.imagen_portada.display_url }}" 
-                       alt="{{ noticia.titulo }}" 
-                       class="img-fluid publication-card-image" 
-                       style="height: 200px; width: 100%; object-fit: cover; object-position: center;">
-                {% else %}
-                  <img src="{% static 'images/img_1_horizontal.jpg' %}" 
-                       alt="{{ noticia.titulo }}" 
-                       class="img-fluid publication-card-image" 
-                       style="height: 200px; width: 100%; object-fit: cover; object-position: center;">
-                {% endif %}
-              </a>
+          <article class="news-card" data-reveal>
+            <a href="{% url 'home:noticia_detalle' noticia.id %}" class="news-card__media">
+              {% if noticia.imagen_portada %}
+                <img src="{{ noticia.imagen_portada.display_url }}" loading="lazy" alt="{{ noticia.titulo }}">
+              {% else %}
+                <img src="{% static 'images/img_1_horizontal.jpg' %}" loading="lazy" alt="{{ noticia.titulo }}">
+              {% endif %}
+              <span class="news-card__category">
+                {% if noticia.categoria %}{{ noticia.categoria.nombre }}{% else %}Sin categoría{% endif %}
+              </span>
+            </a>
 
-              <div class="excerpt">
-                <div class="post-meta align-items-center text-left clearfix">
-                  <span>{{ noticia.createdat|date:"d M Y" }}</span>
-                  <span>&nbsp;•&nbsp;</span>
-                  <span>
-                    {% if noticia.categoria %}
-                      {{ noticia.categoria.nombre }}
-                    {% else %}
-                      Sin categoría
-                    {% endif %}
-                  </span>
-                </div>
+            <div class="news-card__body">
+              <div class="news-card__meta">
+                <span>{{ noticia.createdat|date:"d M Y" }}</span>
+                <span class="dot" aria-hidden="true"></span>
+                <span>{{ noticia.visitas }} visitas</span>
+              </div>
 
-                <h2>
-                  <a href="{% url 'home:noticia_detalle' noticia.id %}">{{ noticia.titulo }}</a>
-                </h2>
-                
-                <p>{{ noticia.resumen }}</p>
-                <p>
-                  <a href="{% url 'home:noticia_detalle' noticia.id %}" class="read-more">Leer más</a>
-                </p>
+              <h2 class="news-card__title">
+                <a href="{% url 'home:noticia_detalle' noticia.id %}">{{ noticia.titulo }}</a>
+              </h2>
+
+              {% if noticia.resumen %}
+                <p class="news-card__excerpt">{{ noticia.resumen }}</p>
+              {% endif %}
+
+              <div class="news-card__footer">
+                <span class="news-card__visits">
+                  {% if noticia.categoria %}{{ noticia.categoria.nombre }}{% else %}General{% endif %}
+                </span>
+                <a href="{% url 'home:noticia_detalle' noticia.id %}" class="news-card__link">
+                  Leer más <span class="bi bi-arrow-right" aria-hidden="true"></span>
+                </a>
               </div>
             </div>
-          </div>
+          </article>
         {% empty %}
-          <div class="col-12 text-center">
-            <p>No hay noticias para esta categoría.</p>
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <h2>Sin noticias por ahora</h2>
+            <p>No hay publicaciones disponibles para esta categoría.</p>
           </div>
         {% endfor %}
       </div>

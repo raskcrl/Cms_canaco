@@ -1,12 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base</title>
-</head>
-<body>
-    <h1>Esta es la pagna base</h1>
-    
-</body>
-</html>
+{% extends 'partials/base.html' %}
+{% load static %}
+{% block title %}Base{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+    <div class="container">
+        <span class="eyebrow">Canaco</span>
+        <h1 class="page-hero__title">Esta es la página base</h1>
+        <p class="page-hero__text">Una vista de referencia del portal. Explora las noticias publicadas o vuelve al inicio.</p>
+        <div class="d-flex flex-wrap gap-2 mt-4">
+            <a href="{% url 'home:index' %}" class="btn btn-primary">Ir al inicio</a>
+            <a href="{% url 'home:categoria' %}" class="btn btn-outline-secondary">Ver noticias</a>
+        </div>
+    </div>
+</section>
+{% endblock content %}

@@ -1,10 +1,11 @@
-{% extends 'partials/base.html' %}
+{% extends 'partials/sidebar_base.html' %}
 {% load static %}
 {% block title %}{% if usuario_editado %}Editar Usuario{% else %}Crear Usuario{% endif %}{% endblock %}
 
 {% block content %}
-<div class="account-page">
-    <div class="account-card">
+<div class="profile-page">
+    <div class="profile-edit-card">
+        <span class="eyebrow">Usuarios</span>
         <h3>{% if usuario_editado %}Editar una cuenta{% else %}Crear una cuenta{% endif %}</h3>
         {% if usuario_editado %}
             <p>Estás modificando al usuario seleccionado: <strong>{{ usuario_editado.username }}</strong>.</p>
@@ -60,12 +61,12 @@
 
             <div class="profile-form-row">
                 <label for="password1">Contraseña</label>
-                <input type="password" id="password1" name="password1" {% if not usuario_editado %}required{% endif %}>
+                <input type="password" id="password1" name="password1" autocomplete="new-password" {% if not usuario_editado %}required{% endif %}>
             </div>
 
             <div class="profile-form-row">
                 <label for="password2">Confirmar</label>
-                <input type="password" id="password2" name="password2" {% if not usuario_editado %}required{% endif %}>
+                <input type="password" id="password2" name="password2" autocomplete="new-password" {% if not usuario_editado %}required{% endif %}>
             </div>
 
             {% if usuario_editado %}
@@ -73,7 +74,7 @@
             {% endif %}
 
             <div class="profile-form-actions">
-                <button type="submit" class="btn btn-success">
+                <button type="submit" class="btn btn-primary">
                     {% if usuario_editado %}Guardar cambios{% else %}Crear usuario{% endif %}
                 </button>
                 <a href="{% url 'home:crud_usuario' %}" class="btn btn-outline-secondary">Volver a usuarios</a>

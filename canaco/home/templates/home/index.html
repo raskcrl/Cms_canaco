@@ -4,111 +4,125 @@
 
 {% block content %}
   {% if slider %}
-    <section class="home-carousel-section bg-light">
-      <div id="homeCarousel" class="carousel slide home-carousel" data-bs-ride="carousel">
-        
-        <!-- Carousel Indicators -->
-        <div class="carousel-indicators">
-          {% for noticia in slider %}
-            <button type="button" 
-                    data-bs-target="#homeCarousel" 
-                    data-bs-slide-to="{{ forloop.counter0 }}" 
-                    class="{% if forloop.first %}active{% endif %}" 
-                    aria-current="{% if forloop.first %}true{% endif %}" 
-                    aria-label="Noticia {{ forloop.counter }}">
-            </button>
-          {% endfor %}
-        </div>
+    <section class="home-carousel-section">
+      <div class="container">
+        <div id="homeCarousel" class="carousel slide home-carousel" data-bs-ride="carousel">
 
-        <!-- Carousel Inner -->
-        <div class="carousel-inner">
-          {% for noticia in slider %}
-            <div class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-interval="4500">
-              <a href="{% url 'home:noticia_detalle' noticia.id %}" class="home-carousel-link">
-                {% if noticia.imagen_portada %}
-                  <img src="{{ noticia.imagen_portada.display_url }}" 
-                       class="d-block w-100 home-carousel-image" 
-                       style="height: 400px; object-fit: cover; object-position: center;" 
-                       alt="{{ noticia.titulo }}">
-                {% else %}
-                  <img src="{% static 'images/hero_1.jpg' %}" 
-                       class="d-block w-100 home-carousel-image" 
-                       style="height: 400px; object-fit: cover; object-position: center;" 
-                       alt="{{ noticia.titulo }}">
-                {% endif %}
+          <div class="carousel-indicators">
+            {% for noticia in slider %}
+              <button type="button"
+                      data-bs-target="#homeCarousel"
+                      data-bs-slide-to="{{ forloop.counter0 }}"
+                      class="{% if forloop.first %}active{% endif %}"
+                      aria-current="{% if forloop.first %}true{% endif %}"
+                      aria-label="Noticia {{ forloop.counter }}">
+              </button>
+            {% endfor %}
+          </div>
 
-                <div class="carousel-caption home-carousel-caption text-start">
-                  <span>{{ noticia.createdat|date:"d M Y" }}</span>
-                  <h2>{{ noticia.titulo }}</h2>
-                  {% if noticia.resumen %}
-                    <p>{{ noticia.resumen|truncatewords:20 }}</p>
+          <div class="carousel-inner">
+            {% for noticia in slider %}
+              <div class="carousel-item {% if forloop.first %}active{% endif %}" data-bs-interval="4500">
+                <a href="{% url 'home:noticia_detalle' noticia.id %}" class="home-carousel-link">
+                  {% if noticia.imagen_portada %}
+                    <img src="{{ noticia.imagen_portada.display_url }}"
+                         class="d-block w-100 home-carousel-image"
+                         loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                         alt="{{ noticia.titulo }}">
+                  {% else %}
+                    <img src="{% static 'images/hero_1.jpg' %}"
+                         class="d-block w-100 home-carousel-image"
+                         loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                         alt="{{ noticia.titulo }}">
                   {% endif %}
-                </div>
-              </a>
-            </div>
-          {% endfor %}
+
+                  <div class="carousel-caption home-carousel-caption text-start">
+                    <span class="hero-kicker">
+                      {% if noticia.categoria %}{{ noticia.categoria.nombre }}{% else %}Actualidad{% endif %}
+                      &nbsp;·&nbsp; {{ noticia.createdat|date:"d M Y" }}
+                    </span>
+                    <h2>{{ noticia.titulo }}</h2>
+                    {% if noticia.resumen %}
+                      <p>{{ noticia.resumen|truncatewords:22 }}</p>
+                    {% endif %}
+                    <span class="hero-cta">Leer noticia <span class="bi bi-arrow-right" aria-hidden="true"></span></span>
+                  </div>
+                </a>
+              </div>
+            {% endfor %}
+          </div>
+
+          <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Anterior</span>
+          </button>
+          <button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Siguiente</span>
+          </button>
+
         </div>
-
-        <!-- Carousel Controls -->
-        <button class="carousel-control-prev" type="button" data-bs-target="#homeCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Anterior</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#homeCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Siguiente</span>
-        </button>
-
       </div>
     </section>
   {% endif %}
 
-  <!-- Recent News Section -->
   <section class="section recent-news-section">
     <div class="container">
-      
-      <div class="row mb-4 justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h2 class="posts-entry-title">Noticias recientes</h2>
-          <a href="{% url 'home:categoria' %}" class="read-more">Ver todas</a>
+
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Actualidad</span>
+          <h2 class="section-heading__title">Últimas noticias</h2>
+          <p class="section-heading__text">Historias, avisos y publicaciones recientes de la comunidad Canaco.</p>
         </div>
+        <a href="{% url 'home:categoria' %}" class="section-link">
+          Ver todas <span class="bi bi-arrow-right" aria-hidden="true"></span>
+        </a>
       </div>
 
-      <div class="row justify-content-center">
+      <div class="news-grid">
         {% for noticia in publicaciones %}
-          <div class="col-lg-4 mb-4">
-            <div class="post-entry-alt">
-              <a href="{% url 'home:noticia_detalle' noticia.id %}" class="img-link">
-                {% if noticia.imagen_portada %}
-                  <img src="{{ noticia.imagen_portada.display_url }}" 
-                       alt="{{ noticia.titulo }}" 
-                       class="img-fluid publication-card-image" 
-                       style="height: 200px; width: 100%; object-fit: cover; object-position: center;">
-                {% else %}
-                  <img src="{% static 'images/img_1_horizontal.jpg' %}" 
-                       alt="{{ noticia.titulo }}" 
-                       class="img-fluid publication-card-image" 
-                       style="height: 200px; width: 100%; object-fit: cover; object-position: center;">
-                {% endif %}
-              </a>
+          <article class="news-card" data-reveal>
+            <a href="{% url 'home:noticia_detalle' noticia.id %}" class="news-card__media">
+              {% if noticia.imagen_portada %}
+                <img src="{{ noticia.imagen_portada.display_url }}" loading="lazy" alt="{{ noticia.titulo }}">
+              {% else %}
+                <img src="{% static 'images/img_1_horizontal.jpg' %}" loading="lazy" alt="{{ noticia.titulo }}">
+              {% endif %}
+              <span class="news-card__category">
+                {% if noticia.categoria %}{{ noticia.categoria.nombre }}{% else %}Sin categoría{% endif %}
+              </span>
+            </a>
 
-              <div class="excerpt">
-                <h2><a href="{% url 'home:noticia_detalle' noticia.id %}">{{ noticia.titulo }}</a></h2>
-                
-                <div class="post-meta align-items-center text-left clearfix">
-                  <span>{{ noticia.createdat|date:"d M Y" }}</span>
-                  <span>&nbsp;-&nbsp;{% if noticia.categoria %}{{ noticia.categoria.nombre }}{% else %}Sin categoría{% endif %}</span>
-                </div>
+            <div class="news-card__body">
+              <div class="news-card__meta">
+                <span>{{ noticia.createdat|date:"d M Y" }}</span>
+                <span class="dot" aria-hidden="true"></span>
+                <span>{{ noticia.visitas }} visitas</span>
+              </div>
 
-                <p>{{ noticia.resumen }}</p>
-                <p><a href="{% url 'home:noticia_detalle' noticia.id %}" class="read-more">Saber más</a></p>
-                <small>Visitas: {{ noticia.visitas }}</small>
+              <h2 class="news-card__title">
+                <a href="{% url 'home:noticia_detalle' noticia.id %}">{{ noticia.titulo }}</a>
+              </h2>
+
+              {% if noticia.resumen %}
+                <p class="news-card__excerpt">{{ noticia.resumen }}</p>
+              {% endif %}
+
+              <div class="news-card__footer">
+                <span class="news-card__visits">
+                  {% if noticia.categoria %}{{ noticia.categoria.nombre }}{% else %}General{% endif %}
+                </span>
+                <a href="{% url 'home:noticia_detalle' noticia.id %}" class="news-card__link">
+                  Leer más <span class="bi bi-arrow-right" aria-hidden="true"></span>
+                </a>
               </div>
             </div>
-          </div>
+          </article>
         {% empty %}
-          <div class="col-12">
-            <p>No hay noticias publicadas todavía.</p>
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <h2>Aún no hay noticias</h2>
+            <p>Las publicaciones aparecerán aquí en cuanto sean publicadas.</p>
           </div>
         {% endfor %}
       </div>
@@ -116,12 +130,14 @@
     </div>
   </section>
 
-  <!-- Modal en la pagina de inicio -->
   <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="welcomeModalLabel">Bienvenido a Canaco</h5>
+          <div>
+            <span class="eyebrow">Bienvenida</span>
+            <h5 class="modal-title" id="welcomeModalLabel">Bienvenido a Canaco</h5>
+          </div>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
@@ -133,7 +149,6 @@
       </div>
     </div>
   </div>
-  <!-- Hice el java scrip de el modal -->     
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       var welcomeModal = new bootstrap.Modal(document.getElementById('welcomeModal'));

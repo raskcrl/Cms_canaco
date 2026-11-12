@@ -1,29 +1,68 @@
 {% load static %}
+{% with current=request.resolver_match.url_name %}
 <div class="site-mobile-menu site-navbar-target">
     <div class="site-mobile-menu-header">
         <div class="site-mobile-menu-close">
-            <span class="icofont-close js-menu-toggle"></span>
+            <span class="js-menu-toggle close-x" aria-label="Cerrar menú"></span>
         </div>
     </div>
     <div class="site-mobile-menu-body"></div>
+    <div class="site-mobile-menu-footer">
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'home:perfil' %}" class="btn btn-outline-light">
+                <span class="bi bi-person" aria-hidden="true"></span> Mi perfil
+            </a>
+            <form method="post" action="{% url 'home:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary w-100">Cerrar sesión</button>
+            </form>
+        {% else %}
+            <a href="{% url 'home:login' %}" class="btn btn-outline-light">
+                <span class="bi bi-box-arrow-in-right" aria-hidden="true"></span> Iniciar sesión
+            </a>
+            <a href="{% url 'home:sign_up' %}" class="btn btn-primary">Crear cuenta</a>
+        {% endif %}
+    </div>
 </div>
 
-<nav class="site-nav">
+<div class="site-topbar">
+    <div class="container">
+        <div class="site-topbar__inner">
+            <span class="site-topbar__date">
+                <span class="bi bi-calendar3" aria-hidden="true"></span>
+                {% now "l, j \d\e F \d\e Y" %}
+            </span>
+            <div class="site-topbar__links">
+                <a href="{% url 'home:categoria' %}">Actualidad</a>
+                <a href="{% url 'home:contactanos' %}">Contacto</a>
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'home:perfil' %}">{{ request.user.username }}</a>
+                {% else %}
+                    <a href="{% url 'home:login' %}">Acceso</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<nav class="site-nav site-navbar-target">
     <div class="container">
         <div class="menu-bg-wrap">
             <div class="site-navigation">
-                <a href="#" class="logo m-0">Canaco<span class="text-primary">.</span></a>
+                <a href="{% url 'home:index' %}" class="logo m-0">Canaco<span class="text-primary">.</span></a>
 
                 <div class="site-navigation-center text-center">
                     <form action="#" class="search-form d-inline-block d-lg-none">
-                        <input type="text" class="form-control" placeholder="Buscar...">
-                        <span class="bi-search"></span>
+                        <input type="text" class="form-control" placeholder="Buscar..." aria-label="Buscar">
+                        <span class="bi-search" aria-hidden="true"></span>
                     </form>
-                    
+
                     <ul class="js-clone-nav d-none d-lg-inline-block text-start site-menu mx-auto">
-                        <li class="active"><a href="{% url 'home:index' %}">Inicio</a></li>
-                        <li class="has-children">
-                            <a href="#">Categoría</a>
+                        <li class="{% if current == 'index' %}active{% endif %}">
+                            <a href="{% url 'home:index' %}">Inicio</a>
+                        </li>
+                        <li class="has-children {% if current == 'categoria' or current == 'categoria_filtrada' or current == 'categoria_detalle' %}active{% endif %}">
+                            <a href="{% url 'home:categoria' %}">Categoría</a>
                             <ul class="dropdown">
                                 <li><a href="{% url 'home:categoria' %}">Todas</a></li>
                                 {% for categoria in global_categorias %}
@@ -31,26 +70,32 @@
                                 {% endfor %}
                             </ul>
                         </li>
-                        <li><a href="{% url 'home:perfil' %}">Perfil</a></li>
+                        <li class="{% if current == 'perfil' or current == 'crud_perfil' or current == 'crud_cambiar_contraseña' %}active{% endif %}">
+                            <a href="{% url 'home:perfil' %}">Perfil</a>
+                        </li>
                     </ul>
                 </div>
 
                 <div class="site-navigation-actions">
-                    <a href="#" class="burger ms-auto site-menu-toggle js-menu-toggle d-inline-block d-lg-none light">
+                    <a href="#" class="burger ms-auto site-menu-toggle js-menu-toggle d-inline-block d-lg-none light" aria-label="Abrir menú">
+                        <span></span>
+                        <span></span>
                         <span></span>
                     </a>
                     {% if request.user.is_authenticated %}
                         <div class="d-none d-lg-flex align-items-center justify-content-end gap-2">
-                            <a href="" class="text-white"></a>
+                            <a href="{% url 'home:perfil' %}" class="auth-link">
+                                <span class="bi bi-person-circle me-1" aria-hidden="true"></span>{{ request.user.username }}
+                            </a>
                             <form method="post" action="{% url 'home:logout' %}">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-sm btn-outline-light">Cerrar sesión</button>
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">Cerrar sesión</button>
                             </form>
                         </div>
                     {% else %}
                         <div class="d-none d-lg-flex align-items-center justify-content-end gap-2">
-                            <a href="{% url 'home:login' %}" class="text-white">Iniciar sesión</a>
-                            <a href="{% url 'home:sign_up' %}" class="btn btn-sm btn-outline-light">Registro</a>
+                            <a href="{% url 'home:login' %}" class="auth-link">Iniciar sesión</a>
+                            <a href="{% url 'home:sign_up' %}" class="btn btn-sm btn-primary">Registro</a>
                         </div>
                     {% endif %}
                 </div>
@@ -58,3 +103,4 @@
         </div>
     </div>
 </nav>
+{% endwith %}

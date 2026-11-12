@@ -5,6 +5,7 @@
 {% block content %}
 <div class="profile-page">
     <div class="profile-edit-card">
+        <span class="eyebrow">Seguridad</span>
         <h3>Cambiar contraseña</h3>
         <p>Esta acción modifica la contraseña de tu cuenta actual: <strong>{{ request.user.username }}</strong>.</p>
 
@@ -21,15 +22,15 @@
             {% csrf_token %}
             <div class="profile-form-row">
                 <label for="actual">Contraseña actual</label>
-                <input type="password" id="actual" name="actual" required>
+                <input type="password" id="actual" name="actual" autocomplete="current-password" required>
             </div>
             <div class="profile-form-row">
                 <label for="nueva">Nueva contraseña</label>
-                <input type="password" id="nueva" name="nueva" required>
+                <input type="password" id="nueva" name="nueva" autocomplete="new-password" required>
             </div>
             <div class="profile-form-row">
                 <label for="confirmar">Confirmar contraseña</label>
-                <input type="password" id="confirmar" name="confirmar" required>
+                <input type="password" id="confirmar" name="confirmar" autocomplete="new-password" required>
             </div>
             <div class="profile-form-actions">
                 <button type="submit" class="btn btn-primary">Actualizar contraseña</button>
